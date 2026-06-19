@@ -7,7 +7,9 @@ from monitor import hash_file, load_baseline, log_alert
 
 
 class IntegrityHandler(FileSystemEventHandler):
+
     def __init__(self):
+        # load once at startup and keep in memory
         self.baseline = load_baseline()
         self.monitor_dir = MONITOR_DIR.resolve()
 
@@ -16,19 +18,14 @@ class IntegrityHandler(FileSystemEventHandler):
         return str(path.relative_to(self.monitor_dir))
 
     def on_modified(self, event):
-        print("DEBUG:", event.src_path)
-
         if event.is_directory:
             return
         try:
             rel = self.get_relative_path(event.src_path)
-            path = self.monitor_dir / rel
             old = self.baseline.get(rel)
-            new = hash_file(path)
-            print("DEBUG relative:", rel)
-            print("DEBUG old hash:", old)
-            print("DEBUG new hash:", new)
+            new = hash_file(self.monitor_dir / rel)
 
+            # only flag it if we've seen this file before and the hash actually changed
             if old and old != new:
                 log_alert(f"MODIFIED: {rel}")
                 self.baseline[rel] = new
@@ -36,32 +33,30 @@ class IntegrityHandler(FileSystemEventHandler):
         except FileNotFoundError:
             pass
 
-        def on_created(self, event):
-            if event.is_directory:
-                return
+    def on_created(self, event):
+        if event.is_directory:
+            return
 
-            rel = self.get_relative_path(event.src_path)
-            path = self.monitor_dir / rel
-            self.baseline[rel] = hash_file(path)
-            log_alert(f"NEW FILE: {rel}")
+        rel = self.get_relative_path(event.src_path)
+        self.baseline[rel] = hash_file(self.monitor_dir / rel)
+        log_alert(f"NEW FILE: {rel}")
 
-        def on_deleted(self, event):
-            if event.is_directory:
-                return
+    def on_deleted(self, event):
+        if event.is_directory:
+            return
 
-            rel = self.get_relative_path(event.src_path)
+        rel = self.get_relative_path(event.src_path)
+        if rel in self.baseline:
+            del self.baseline[rel]
 
-            if rel in self.baseline:
-                del self.baseline[rel]
+        log_alert(f"DELETED: {rel}")
 
-            log_alert(f"DELETED: {rel}")
 
 def start_watcher():
     MONITOR_DIR.mkdir(exist_ok=True)
     monitor_dir = MONITOR_DIR.resolve()
 
     print(f"watching {monitor_dir} - ctrl+c to stop")
-
     handler = IntegrityHandler()
     observer = Observer()
     observer.schedule(handler, str(monitor_dir), recursive=True)

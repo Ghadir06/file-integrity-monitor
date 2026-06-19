@@ -83,9 +83,9 @@ alerts print to the terminal and get saved to `logs/alerts.log`:
 [2026-06-19 19:03:19] DELETED: test.txt
 ```
 
-![alt text](image-2.png)
+<img width="1834" height="120" alt="image" src="https://github.com/user-attachments/assets/911fdf54-689a-4b71-a973-e3a75ff42abd" />
 
-![alt text](image-3.png)
+<img width="1596" height="182" alt="image" src="https://github.com/user-attachments/assets/c73fc9cf-d065-40e7-801a-6b21796a20e0" />
 
 
 ## changing the monitored directory

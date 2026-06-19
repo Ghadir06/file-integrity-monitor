@@ -1,11 +1,11 @@
-# file-integrity-monitor
+# File-Integrity-Monitor
 
 A Python tool that watches a directory and detects when files are created, modified, or deleted using SHA-256 hashing to catch any changes at the byte level. It runs in two modes: a one-off integrity check against a saved baseline, or a real-time watcher that alerts you the moment something changes.
 
 I built this as a solo project to get hands-on with some concepts from my security modules, specifically how file integrity monitoring actually works under the hood (it's basically what tools like Tripwire do).
 
 
-## how it works
+## How It Works
 
 When you create a baseline, the tool walks the target directory, hashes every file with SHA-256, and saves the results to `baseline.json`. When you run a check (or have the watcher running), it compares the current state against that snapshot and flags anything that's changed.
 
@@ -18,7 +18,7 @@ All alerts get timestamped and written to `logs/alerts.log`.
 The real-time watcher uses [watchdog](https://github.com/gorakhargosh/watchdog) to listen for filesystem events rather than polling, so it reacts instantly instead of running on a timer.
 
 
-## project structure
+## Project Structure
 
 ```
 file-integrity-monitor/
@@ -33,7 +33,7 @@ file-integrity-monitor/
 ```
 
 
-## setup
+## Setup
 
 Clone the repo and create a virtual environment:
 
@@ -46,7 +46,7 @@ pip install -r requirements.txt
 ```
 
 
-## usage
+## Usage
 
 **1. Create a baseline**
 
@@ -73,7 +73,7 @@ python monitor.py --watch
 ```
 
 
-## example output
+## Example Output
 
 Alerts print to the terminal and get saved to `logs/alerts.log`:
 
@@ -90,7 +90,7 @@ Alerts print to the terminal and get saved to `logs/alerts.log`:
 <img width="1864" height="184" alt="image" src="https://github.com/user-attachments/assets/84078423-8782-4202-9f38-77e1f8c4fe2d" />
 
 
-## changing the monitored directory
+## Changing the Monitored Directory
 
 Edit `config.py`:
 
@@ -103,7 +103,7 @@ LOG_FILE = Path("logs/alerts.log")
 ```
 
 
-## dependencies
+## Dependencies
 
 - [watchdog](https://pypi.org/project/watchdog/) — filesystem event monitoring  
 - Everything else (`hashlib`, `json`, `pathlib`) is standard library
@@ -113,7 +113,7 @@ watchdog==6.0.0
 ```
 
 
-## what I learned
+## What I Learned
 
 - How SHA-256 hashing works in practice and why reading files in chunks matters for memory efficiency
 - The difference between polling-based and event-driven monitoring
@@ -122,7 +122,7 @@ watchdog==6.0.0
 - Structuring a Python project across multiple modules with a shared config
 
 
-## possible improvements
+## Possible Improvements
 
 - Email alerts when changes are detected (SMTP via `smtplib`)
 - Exclude patterns for ignoring certain files or directories
@@ -130,6 +130,6 @@ watchdog==6.0.0
 - Swap `baseline.json` for SQLite once the number of tracked files gets large
 
 
-## license
+## License
 
 MIT

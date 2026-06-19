@@ -15,46 +15,46 @@ class IntegrityHandler(FileSystemEventHandler):
         path = Path(event_path).resolve()
         return str(path.relative_to(self.monitor_dir))
 
-def on_modified(self, event):
-    print("DEBUG:", event.src_path)
+    def on_modified(self, event):
+        print("DEBUG:", event.src_path)
 
-    if event.is_directory:
-        return
-    try:
-        rel = self.get_relative_path(event.src_path)
-        path = self.monitor_dir / rel
-        old = self.baseline.get(rel)
-        new = hash_file(path)
-        print("DEBUG relative:", rel)
-        print("DEBUG old hash:", old)
-        print("DEBUG new hash:", new)
-
-        if old and old != new:
-            log_alert(f"MODIFIED: {rel}")
-            self.baseline[rel] = new
-
-    except FileNotFoundError:
-        pass
-
-    def on_created(self, event):
         if event.is_directory:
             return
+        try:
+            rel = self.get_relative_path(event.src_path)
+            path = self.monitor_dir / rel
+            old = self.baseline.get(rel)
+            new = hash_file(path)
+            print("DEBUG relative:", rel)
+            print("DEBUG old hash:", old)
+            print("DEBUG new hash:", new)
 
-        rel = self.get_relative_path(event.src_path)
-        path = self.monitor_dir / rel
-        self.baseline[rel] = hash_file(path)
-        log_alert(f"NEW FILE: {rel}")
+            if old and old != new:
+                log_alert(f"MODIFIED: {rel}")
+                self.baseline[rel] = new
 
-    def on_deleted(self, event):
-        if event.is_directory:
-            return
+        except FileNotFoundError:
+            pass
 
-        rel = self.get_relative_path(event.src_path)
+        def on_created(self, event):
+            if event.is_directory:
+                return
 
-        if rel in self.baseline:
-            del self.baseline[rel]
+            rel = self.get_relative_path(event.src_path)
+            path = self.monitor_dir / rel
+            self.baseline[rel] = hash_file(path)
+            log_alert(f"NEW FILE: {rel}")
 
-        log_alert(f"DELETED: {rel}")
+        def on_deleted(self, event):
+            if event.is_directory:
+                return
+
+            rel = self.get_relative_path(event.src_path)
+
+            if rel in self.baseline:
+                del self.baseline[rel]
+
+            log_alert(f"DELETED: {rel}")
 
 def start_watcher():
     MONITOR_DIR.mkdir(exist_ok=True)

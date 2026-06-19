@@ -4,7 +4,6 @@ A Python tool that watches a directory and detects when files are created, modif
 
 I built this as a solo project to get hands-on with some concepts from my security modules, specifically how file integrity monitoring actually works under the hood (it's basically what tools like Tripwire do).
 
----
 
 ## how it works
 
@@ -18,7 +17,6 @@ All alerts get timestamped and written to `logs/alerts.log`.
 
 The real-time watcher uses [watchdog](https://github.com/gorakhargosh/watchdog) to listen for filesystem events rather than polling, so it reacts instantly instead of running on a timer.
 
----
 
 ## project structure
 
@@ -34,7 +32,6 @@ file-integrity-monitor/
     └── example.txt
 ```
 
----
 
 ## setup
 
@@ -48,7 +45,6 @@ source .venv/bin/activate       # windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
----
 
 ## usage
 
@@ -76,7 +72,6 @@ listens for filesystem events and logs alerts as they happen. open a second term
 python monitor.py --watch
 ```
 
----
 
 ## example output
 
@@ -89,9 +84,9 @@ alerts print to the terminal and get saved to `logs/alerts.log`:
 ```
 
 ![alt text](image-2.png)
+
 ![alt text](image-3.png)
 
----
 
 ## changing the monitored directory
 
@@ -105,7 +100,6 @@ BASELINE_FILE = Path("baseline.json")
 LOG_FILE = Path("logs/alerts.log")
 ```
 
----
 
 ## dependencies
 
@@ -116,7 +110,6 @@ LOG_FILE = Path("logs/alerts.log")
 watchdog==6.0.0
 ```
 
----
 
 ## what I learned
 
@@ -126,7 +119,6 @@ watchdog==6.0.0
 - pathlib for cross-platform file handling
 - structuring a Python project across multiple modules with a shared config
 
----
 
 ## possible improvements
 
@@ -135,7 +127,6 @@ watchdog==6.0.0
 - scheduled checks via cron instead of manual runs
 - swap `baseline.json` for SQLite once the number of tracked files gets large
 
----
 
 ## license
 

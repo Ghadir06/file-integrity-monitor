@@ -35,7 +35,7 @@ file-integrity-monitor/
 
 ## setup
 
-clone the repo and create a virtual environment:
+Clone the repo and create a virtual environment:
 
 ```bash
 git clone https://github.com/your-username/file-integrity-monitor.git
@@ -48,25 +48,25 @@ pip install -r requirements.txt
 
 ## usage
 
-**1. create a baseline**
+**1. Create a baseline**
 
-scans `test_folder` and saves a hash snapshot to `baseline.json`
+Scans `test_folder` and saves a hash snapshot to `baseline.json`
 
 ```bash
 python monitor.py --create-baseline
 ```
 
-**2. run a manual integrity check**
+**2. Run a manual integrity check**
 
-compares current state against the baseline and prints any differences
+Compares current state against the baseline and prints any differences
 
 ```bash
 python monitor.py --check
 ```
 
-**3. start the real-time watcher**
+**3. Start the real-time watcher**
 
-listens for filesystem events and logs alerts as they happen. open a second terminal to trigger test events while this is running
+Listens for filesystem events and logs alerts as they happen. Open a second terminal to trigger test events while this is running
 
 ```bash
 python monitor.py --watch
@@ -75,7 +75,7 @@ python monitor.py --watch
 
 ## example output
 
-alerts print to the terminal and get saved to `logs/alerts.log`:
+Alerts print to the terminal and get saved to `logs/alerts.log`:
 
 ```
 [2026-06-19 19:02:42] NEW FILE: test.txt
@@ -92,7 +92,7 @@ alerts print to the terminal and get saved to `logs/alerts.log`:
 
 ## changing the monitored directory
 
-edit `config.py`:
+Edit `config.py`:
 
 ```python
 from pathlib import Path
@@ -106,7 +106,7 @@ LOG_FILE = Path("logs/alerts.log")
 ## dependencies
 
 - [watchdog](https://pypi.org/project/watchdog/) — filesystem event monitoring  
-- everything else (`hashlib`, `json`, `pathlib`) is standard library
+- Everything else (`hashlib`, `json`, `pathlib`) is standard library
 
 ```
 watchdog==6.0.0
@@ -115,19 +115,19 @@ watchdog==6.0.0
 
 ## what I learned
 
-- how SHA-256 hashing works in practice and why reading files in chunks matters for memory efficiency
-- the difference between polling-based and event-driven monitoring
-- how tools like Tripwire and AIDE approach file integrity at a conceptual level
-- pathlib for cross-platform file handling
-- structuring a Python project across multiple modules with a shared config
+- How SHA-256 hashing works in practice and why reading files in chunks matters for memory efficiency
+- The difference between polling-based and event-driven monitoring
+- How tools like Tripwire and AIDE approach file integrity at a conceptual level
+- Pathlib for cross-platform file handling
+- Structuring a Python project across multiple modules with a shared config
 
 
 ## possible improvements
 
-- email alerts when changes are detected (SMTP via `smtplib`)
-- exclude patterns for ignoring certain files or directories
-- scheduled checks via cron instead of manual runs
-- swap `baseline.json` for SQLite once the number of tracked files gets large
+- Email alerts when changes are detected (SMTP via `smtplib`)
+- Exclude patterns for ignoring certain files or directories
+- Scheduled checks via cron instead of manual runs
+- Swap `baseline.json` for SQLite once the number of tracked files gets large
 
 
 ## license

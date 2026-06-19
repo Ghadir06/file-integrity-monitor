@@ -6,6 +6,7 @@ from pathlib import Path
 from config import MONITOR_DIR, BASELINE_FILE, LOG_FILE
 
 
+
 # SHA-256 each file - read in chunks so big files don't kill memory
 def hash_file(path: Path) -> str:
     # read in chunks so it doesn't load the whole file into memory 
@@ -15,7 +16,6 @@ def hash_file(path: Path) -> str:
             h.update(chunk)
     return h.hexdigest()
 
-
 def build_baseline(directory: Path) -> dict:
     files = {}
     for p in directory.rglob("*"):
@@ -24,12 +24,10 @@ def build_baseline(directory: Path) -> dict:
             files[rel] = hash_file(p)
     return files
 
-
 def save_baseline(baseline: dict):
     with open(BASELINE_FILE, "w") as f:
         json.dump(baseline, f, indent=4)
     print(f"baseline saved ({len(baseline)} files)")
-
 
 def load_baseline() -> dict:
     if not BASELINE_FILE.exists():
@@ -38,7 +36,6 @@ def load_baseline() -> dict:
     with open(BASELINE_FILE) as f:
         return json.load(f)
 
-
 def log_alert(msg: str):
     LOG_FILE.parent.mkdir(exist_ok=True)
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -46,7 +43,6 @@ def log_alert(msg: str):
     print(line)
     with open(LOG_FILE, "a") as f:
         f.write(line + "\n")
-
 
 def check_integrity(directory: Path) -> list:
     baseline = load_baseline()
@@ -84,10 +80,14 @@ def main():
         save_baseline(baseline)
     elif "--check" in sys.argv:
         check_integrity(MONITOR_DIR)
+    elif "--watch" in sys.argv:
+        from watcher import start_watcher
+        start_watcher()
     else:
         print("Usage:")
         print("  python monitor.py --create-baseline")
         print("  python monitor.py --check")
+        print("  python monitor.py --watch")
 
 if __name__ == "__main__":
     main()

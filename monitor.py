@@ -1,5 +1,6 @@
 import hashlib
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
 from config import MONITOR_DIR, BASELINE_FILE, LOG_FILE
@@ -75,22 +76,18 @@ def check_integrity(directory: Path) -> list:
         log_alert("all good there were no changes detected")
     return alerts
 
-
 def main():
     MONITOR_DIR.mkdir(exist_ok=True)
-    print("file integrity monitor")
-    print("1. create baseline")
-    print("2. check integrity")
 
-    choice = input("> ")
-
-    if choice == "1":
-        save_baseline(build_baseline(MONITOR_DIR))
-    elif choice == "2":
+    if "--create-baseline" in sys.argv:
+        baseline = build_baseline(MONITOR_DIR)
+        save_baseline(baseline)
+    elif "--check" in sys.argv:
         check_integrity(MONITOR_DIR)
     else:
-        print("not a valid option")
-
+        print("Usage:")
+        print("  python monitor.py --create-baseline")
+        print("  python monitor.py --check")
 
 if __name__ == "__main__":
     main()

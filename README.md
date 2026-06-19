@@ -85,7 +85,7 @@ alerts print to the terminal and get saved to `logs/alerts.log`:
 
 <img width="1834" height="120" alt="image" src="https://github.com/user-attachments/assets/911fdf54-689a-4b71-a973-e3a75ff42abd" />
 
-<img width="1596" height="182" alt="image" src="https://github.com/user-attachments/assets/c73fc9cf-d065-40e7-801a-6b21796a20e0" />
+<img width="1864" height="184" alt="image" src="https://github.com/user-attachments/assets/84078423-8782-4202-9f38-77e1f8c4fe2d" />
 
 
 ## changing the monitored directory
